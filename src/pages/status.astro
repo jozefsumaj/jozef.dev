@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const services = [
+  { name: 'Blog', status: 'operational', emoji: '📝' },
+];
+
+const statusConfig = {
+  operational: { label: 'Operational', color: 'var(--color-success)', bar: '████' },
+  degraded: { label: 'Degraded', color: 'var(--color-warning)', bar: '███░' },
+  outage: { label: 'Major Outage', color: '#f85149', bar: '█░░░' },
+  maintenance: { label: 'Maintenance', color: 'var(--accent)', bar: '██░░' },
+};
+
+const incidents = [
+  {
+    date: 'Nov 28, 2025',
+    time: '15:11 - 19:12 UTC',
+    title: 'Cloudflare Workers Issues',
+    description: 'Hosting provider of this website had issues. We watched helplessly while refreshing their status page (which was also down).',
+    status: 'resolved',
+  },
+];
+---
+
+<BaseLayout title="Status" description="System status for jozef.dev">
+  <div class="mb-8">
+    <h1 class="text-2xl font-mono font-semibold mb-2" style="color: var(--text);">
+      System Status
+    </h1>
+  </div>
+
+  <!-- Overall Status Banner + Stats -->
+  <div 
+    class="rounded-lg mb-8 border overflow-hidden"
+    style="background-color: var(--bg-secondary); border-color: var(--border);"
+  >
+    <div class="p-4 font-mono text-sm border-b" style="border-color: var(--border);">
+      <span style="color: var(--color-success);">●</span> 
+      <span style="color: var(--text);">All systems operational</span>
+      <span style="color: var(--text-muted);"> // do not edit this line</span>
+    </div>
+    <div class="p-4 font-mono text-xs" style="color: var(--text-muted);">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+        <div>
+          <div class="text-lg" style="color: var(--text);">99.97%</div>
+          <div>Uptime (reported)</div>
+        </div>
+        <div>
+          <div class="text-lg" style="color: var(--text);">¯\_(ツ)_/¯</div>
+          <div>Uptime (actual)</div>
+        </div>
+        <div>
+          <div class="text-lg" style="color: var(--text);">0</div>
+          <div>Alerts muted</div>
+        </div>
+        <div>
+          <div class="text-lg" style="color: var(--text);">✓</div>
+          <div>Vibes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services Grid -->
+  <div class="space-y-3 mb-12">
+    {services.map(service => {
+      const config = statusConfig[service.status];
+      return (
+        <div 
+          class="flex items-center justify-between p-3 rounded-lg border font-mono text-sm"
+          style="background-color: var(--bg-secondary); border-color: var(--border);"
+        >
+          <div class="flex items-center gap-3">
+            <span>{service.emoji}</span>
+            <span style="color: var(--text);">{service.name}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span style={`color: ${config.color};`}>{config.bar}</span>
+            <span 
+              class="text-xs px-2 py-0.5 rounded"
+              style={`color: ${config.color}; background-color: var(--bg-tertiary);`}
+            >
+              {config.label}
+            </span>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Incident History -->
+  <div class="mb-8">
+    <h2 class="text-sm font-mono uppercase tracking-wider mb-4" style="color: var(--text-muted);">
+      Past Incidents
+    </h2>
+    
+    <div class="space-y-6">
+      {incidents.map(incident => (
+        <div 
+          class="border-l-2 pl-4"
+          style="border-color: var(--border);"
+        >
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="font-mono text-xs" style="color: var(--text-muted);">
+              {incident.date}
+            </span>
+            <span class="font-mono text-xs" style="color: var(--text-muted);">
+              {incident.time}
+            </span>
+            <span 
+              class="text-xs px-2 py-0.5 rounded font-mono"
+              style="background-color: var(--bg-tertiary); color: var(--color-success);"
+            >
+              {incident.status}
+            </span>
+          </div>
+          <h3 class="font-mono text-sm mb-1" style="color: var(--text);">
+            {incident.title}
+          </h3>
+          <p class="text-sm" style="color: var(--text-secondary);">
+            {incident.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

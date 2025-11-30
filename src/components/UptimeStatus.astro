@@ -3,9 +3,9 @@
 const launchDate = new Date('2025-11-30T00:00:00Z');
 ---
 
-<span class="font-mono text-sm" style="color: var(--text-muted);">
+<a href="/status" class="font-mono text-sm hover:opacity-80 transition-opacity" style="color: var(--text-muted);">
   <span style="color: var(--color-success);">●</span> operational · 99.97% · <span id="uptime-days">0d</span>
-</span>
+</a>
 
 <script define:vars={{ launchDate: launchDate.toISOString() }}>
   function updateUptime() {
