@@ -1,0 +1,53 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import UptimeStatus from './UptimeStatus.astro';
+
+const navItems = [
+  { href: '/', label: 'posts' },
+  { href: '/about', label: 'about' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header 
+  class="w-full border-b"
+  style="border-color: var(--border); background-color: var(--bg);"
+>
+  <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-6">
+      <a 
+        href="/" 
+        class="font-mono text-lg font-semibold tracking-tight hover:opacity-80 transition-opacity"
+        style="color: var(--text);"
+      >
+        jozef<span style="color: var(--accent);">.</span>dev
+      </a>
+      <span class="hidden sm:inline">
+        <UptimeStatus />
+      </span>
+    </div>
+    
+    <nav class="flex items-center gap-6">
+      {navItems.map(({ href, label }) => {
+        const isActive = currentPath === href || 
+          (href !== '/' && currentPath.startsWith(href));
+        
+        return (
+          <a 
+            href={href}
+            class:list={[
+              "font-mono text-sm transition-colors",
+              isActive ? "font-medium" : "opacity-70 hover:opacity-100"
+            ]}
+            style={isActive ? "color: var(--accent);" : "color: var(--text-secondary);"}
+          >
+            {label}
+          </a>
+        );
+      })}
+      
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>

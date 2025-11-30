@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  
+  // Get all unique tags
+  const tags = [...new Set(posts.flatMap(post => post.data.tags))];
+  
+  return tags.map(tag => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter(post => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout 
+  title={`#${tag}`} 
+  description={`Posts tagged with ${tag}`}
+>
+  <section class="mb-8">
+    <a 
+      href="/" 
+      class="inline-flex items-center gap-2 text-sm font-mono mb-6 opacity-70 hover:opacity-100 transition-opacity"
+      style="color: var(--text-secondary);"
+    >
+      <span>←</span>
+      <span>all posts</span>
+    </a>
+    
+    <h1 class="text-2xl font-mono font-semibold" style="color: var(--text);">
+      <span style="color: var(--accent);">#</span>{tag}
+    </h1>
+    <p class="mt-2 text-sm" style="color: var(--text-muted);">
+      {posts.length} post{posts.length !== 1 ? 's' : ''}
+    </p>
+  </section>
+  
+  <section>
+    <div class="divide-y" style="border-color: var(--border);">
+      {posts.map(post => (
+        <PostCard post={post} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+

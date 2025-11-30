@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
+---
+
+<BaseLayout title="Home" description="Notes on keeping systems running (most of the time)">
+  <section class="mb-12">
+    <p class="text-lg" style="color: var(--text);">
+      Notes on keeping systems running (most of the time).
+    </p>
+  </section>
+  
+  {allTags.length > 0 && (
+    <section class="mb-8">
+      <div class="flex flex-wrap gap-2">
+        {allTags.map(tag => (
+          <a 
+            href={`/tags/${tag}`}
+            class="text-xs font-mono px-2 py-1 rounded transition-colors hover:opacity-80"
+            style="background-color: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border);"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+  
+  <section>
+    {posts.length === 0 ? (
+      <p class="font-mono text-sm" style="color: var(--text-muted);">
+        No posts yet.
+      </p>
+    ) : (
+      <>
+        <h2 class="text-sm font-mono uppercase tracking-wider mb-6" style="color: var(--text-muted);">
+          Posts
+        </h2>
+        <div class="divide-y" style="border-color: var(--border);">
+          {posts.map(post => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      </>
+    )}
+  </section>
+</BaseLayout>

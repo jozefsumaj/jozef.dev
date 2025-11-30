@@ -1,0 +1,22 @@
+---
+// These can be updated manually or pulled from build stats
+const stats = [
+  { label: '0.9s', title: 'build time' },
+  { label: '14kb', title: 'bundle size' },
+  { label: '100', title: 'lighthouse score' },
+  { label: 'strict', title: 'typescript' },
+];
+---
+
+<div class="flex flex-wrap gap-2">
+  {stats.map(({ label, title }) => (
+    <span 
+      class="text-xs font-mono px-2 py-0.5 rounded"
+      style="background-color: var(--bg-tertiary); color: var(--text-muted);"
+      title={title}
+    >
+      {label}
+    </span>
+  ))}
+</div>
+

@@ -1,0 +1,28 @@
+---
+// Site launch date - update this to your actual deploy date
+const launchDate = new Date('2025-11-30T00:00:00Z');
+---
+
+<span class="font-mono text-sm" style="color: var(--text-muted);">
+  <span style="color: var(--color-success);">●</span> operational · 99.97% · <span id="uptime-days">0d</span>
+</span>
+
+<script define:vars={{ launchDate: launchDate.toISOString() }}>
+  function updateUptime() {
+    const launch = new Date(launchDate);
+    const now = new Date();
+    const diff = now.getTime() - launch.getTime();
+    
+    if (diff < 0) {
+      document.getElementById('uptime-days').textContent = '0d';
+      return;
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById('uptime-days').textContent = `${days}d`;
+  }
+  
+  updateUptime();
+  setInterval(updateUptime, 60000);
+  document.addEventListener('astro:after-swap', updateUptime);
+</script>
